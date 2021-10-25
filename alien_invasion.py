@@ -189,7 +189,7 @@ class AlienInvasion:
 
             if self.stats.game_active:
                 self.ship.update()
-                self.bullets.update()
+                self._update_bullets()
                 self._update_aliens()
 
 
@@ -244,6 +244,17 @@ class AlienInvasion:
 # one pixel every time you press the right arrow key. That’s a start, but it’s not
 # an efficient way to control the ship. Let’s improve this control by allowing
 # continuous movement.
+
+
+    def _update_bullets(self):
+
+        self.bullets.update()
+        # Get rid of bullets that have disappeared.
+        for bullet in self.bullets.copy():
+            if bullet.rect.bottom <= 0:
+                self.bullets.remove(bullet)
+
+        self._check_bullet_alien_collisions()
 
     def _ship_hit(self):
         # respond to the ship being hit by an alien.
@@ -386,7 +397,7 @@ class AlienInvasion:
             # When you run the game now, you should be able to fire bullets only in
             # groups of three.
 
-        self._check_bullet_alien_collisions()
+        # self._check_bullet_alien_collisions()
 
     def _check_bullet_alien_collisions(self):
         collisions = pygame.sprite.groupcollide(
